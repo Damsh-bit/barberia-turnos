@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { use } from "react";
 
+export const dynamic = "force-dynamic"
+
 const nombres = {
   "corte-clasico": "Corte clásico",
   "corte-barba": "Corte + barba",
