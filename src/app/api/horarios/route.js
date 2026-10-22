@@ -26,12 +26,17 @@ export async function GET(request) {
       singleEvents: true,
     });
 
-    const ocupados = (res.data.items || []).map((evento) => {
-      const hora = new Date(evento.start.dateTime);
-      const h = hora.getHours().toString().padStart(2, "0");
-      const m = hora.getMinutes().toString().padStart(2, "0");
-      return h + ":" + m;
+    // getHours() usa la zona del servidor (UTC en Vercel); formateamos en hora argentina
+    const formatoHora = new Intl.DateTimeFormat("es-AR", {
+      timeZone: "America/Argentina/Buenos_Aires",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
     });
+
+    const ocupados = (res.data.items || [])
+      .filter((evento) => evento.start.dateTime)
+      .map((evento) => formatoHora.format(new Date(evento.start.dateTime)));
 
     return NextResponse.json({ ocupados });
   } catch (error) {
